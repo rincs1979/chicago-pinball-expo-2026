@@ -212,9 +212,9 @@ footer p{margin:6px 0}
 <div id="mapview">
   <section class="hall" id="hall">
     <h2>Expo hall</h2>
-    <p class="lede">Tap the <b>free play</b> area for every machine in the free play rows, or a numbered booth for what vendors and manufacturers have on show. Built from three walkthrough videos, with machines checked frame by frame and against what the hosts say out loud. Booths are less complete than free play: some were only partly filmed.</p>
+    <p class="lede">Huge thanks to <a href="https://www.youtube.com/watch?v=bm74BBCvSiE" target="_blank" rel="noopener">MN Retro Gamer</a>, <a href="https://www.youtube.com/watch?v=oTIDGLOeFSQ" target="_blank" rel="noopener">Cary Hardy</a> and the <a href="https://www.youtube.com/watch?v=DjAO4piL9xI" target="_blank" rel="noopener">Dutch Pinball Museum</a>, whose walkthrough videos made this map possible. Every machine was checked frame by frame against their footage and what they say on camera, and each one links back to the moment it appears. Go watch and subscribe.</p>
+    <p class="lede">Tap the <b>free play</b> area for 180+ machines row by row, the <b>Homebrew Village</b> for 30+ one-of-a-kind machines built by hobbyists (with links to their builders), or a numbered booth for what vendors and manufacturers have on show. Counts are what we could identify; there's more on the floor than we could see.</p>
     <div class="hallwrap"><div class="hallmap" id="hallmap"><img src="hall.png" alt="Official expo map"><button class="hbarea" id="hbarea" type="button"><span>Homebrew<br><small id="hbcount"></small></span></button><button class="fparea" id="fparea" type="button"><span>Free play<br><small id="fpcount"></small></span></button></div></div>
-    <p class="aplegend"><i></i>Orange pins: rough spot, worked out from what was filmed nearby.</p>
     <div class="blist" id="blist"></div>
   </section>
 
@@ -442,11 +442,11 @@ order.forEach((b,i)=>{
   b.text=(b.name+" "+b.games.map(g=>g.name+" "+(g.maker||"")).join(" ")).toLowerCase();
   if(b.xy){const p=document.createElement("button");p.type="button";p.className="pin";p.textContent=i+1;
     p.style.left=((b.xy[0]-MX[0])/(MX[1]-MX[0])*100)+"%";p.style.top=((b.xy[1]-MY[0])/(MY[1]-MY[0])*100)+"%";
-    if(b.approx)p.classList.add("approx");p.setAttribute("aria-label",b.name);p.onclick=()=>openBooth(i);hallmap.appendChild(p);b.pin=p;}
+    p.setAttribute("aria-label",b.name);p.onclick=()=>openBooth(i);hallmap.appendChild(p);b.pin=p;}
   const c=document.createElement("button");c.type="button";c.className="bcard";
   const n=b.games.filter(g=>g.conf!=="unk").length;
   c.innerHTML=`<span class="num">${b.xy?i+1:"\u2022"}</span><div><b>${b.name}</b><span>${n} game${n===1?"":"s"} named \u00b7 ${b.coverage}${b.xy?"":" \u00b7 spot not on the map"}</span></div>`;
-  if(b.approx)c.classList.add("approx");c.onclick=()=>openBooth(i);blist.appendChild(c);b.card=c;
+  c.onclick=()=>openBooth(i);blist.appendChild(c);b.card=c;
 });
 let bSel=-1;
 const confTxt={read:"",guess:"best guess",said:"said, not on camera",unk:""};
@@ -485,7 +485,7 @@ fparea.onclick=()=>showView("free");
 document.getElementById("back").onclick=()=>showView("map");
 addEventListener("popstate",e=>showView(e.state&&e.state.v==="free"?"free":"map",false));
 if(location.hash==="#freeplay")showView("free",false);
-document.getElementById("fpcount").textContent=tiles.length+" machines";
+document.getElementById("fpcount").textContent=tiles.length+"+ machines";
 
 
 /* tabs, manufacturer filter, A to Z list */
@@ -550,12 +550,12 @@ HB.forEach((h,i)=>{
     <div class="lk">${h.link?`<a class="pri" href="${h.link}" target="_blank" rel="noopener">${h.ltype||"Link"}</a>`:""}<a href="https://www.youtube.com/watch?v=${v.id}&t=${secs(h.t)}s" target="_blank" rel="noopener">Watch at ${h.t}</a></div></div>`;
   hbgrid.appendChild(c);h.el=c;h.text=(h.n+" "+h.builder+" "+h.note).toLowerCase();
 });
-document.getElementById("hbcount").textContent=HB.length+" machines";
+document.getElementById("hbcount").textContent=HB.length+"+ machines";
 {const c=document.createElement("button");c.type="button";c.className="bcard";c.style.borderColor="#16a34a";
- c.innerHTML=`<span class="num" style="background:#16a34a">H</span><div><b>Homebrew Village</b><span>${HB.length} machines with builders and links</span></div>`;
+ c.innerHTML=`<span class="num" style="background:#16a34a">H</span><div><b>Homebrew Village</b><span>${HB.length}+ machines with builders and links</span></div>`;
  c.onclick=()=>showView("homebrew");blist.prepend(c);
  const f=document.createElement("button");f.type="button";f.className="bcard";f.style.borderColor="#2563eb";
- f.innerHTML=`<span class="num" style="background:#2563eb">F</span><div><b>Free play rows</b><span>${tiles.length} machines, row by row</span></div>`;
+ f.innerHTML=`<span class="num" style="background:#2563eb">F</span><div><b>Free play rows</b><span>${tiles.length}+ machines, row by row</span></div>`;
  f.onclick=()=>showView("free");blist.prepend(f);}
 const _sv2=showView;
 showView=function(v,push){
@@ -599,8 +599,8 @@ function apply(){
   fparea.classList.toggle("hit",active&&n>0);
   let hn=0;for(const h of HB){const ok=active&&!!s&&h.text.includes(s)&&!mkSel.value;if(ok)hn++;h.el.classList.toggle("hit",ok);h.el.classList.toggle("dim",active&&!ok);}
   hbarea.classList.toggle("hit",hn>0);
-  document.getElementById("hbcount").textContent=active&&s?`${hn} match${hn===1?"":"es"}`:HB.length+" machines";
-  document.getElementById("fpcount").textContent=active?`${n} match${n===1?"":"es"}`:tiles.length+" machines";
+  document.getElementById("hbcount").textContent=active&&s?`${hn} match${hn===1?"":"es"}`:HB.length+"+ machines";
+  document.getElementById("fpcount").textContent=active?`${n} match${n===1?"":"es"}`:tiles.length+"+ machines";
   countEl.innerHTML=active?`<a href="#freeplay" id="cf">${n} in free play</a>, ${bn} booth${bn===1?"":"s"}${s?`, ${HB.filter(h=>h.text.includes(s)).length} homebrew`:""}`:"";
   const cf=document.getElementById("cf");if(cf)cf.onclick=e=>{e.preventDefault();showView("free");const f=tiles.find(t=>t.el.classList.contains("hit"));f&&f.el.scrollIntoView({block:"center"});};
   if(s&&first&&!fpview.hidden)first.scrollIntoView({block:"center",behavior:"smooth"});
